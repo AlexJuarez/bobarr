@@ -4,7 +4,7 @@ function formatLog(log: Record<string, any>) {
   const { timestamp, level, context, message, ...rest } = log;
   const baseLine = `${timestamp} [${level}] ${context} - ${message}`;
   return Object.keys(rest).length > 0
-    ? `${baseLine} - ${JSON.stringify(rest)}`
+    ? `${baseLine} - ${Object.entries(rest).map((k, v) => `${k}:${v}`).join(', ')}`
     : baseLine;
 }
 
