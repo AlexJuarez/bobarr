@@ -1,30 +1,38 @@
 import {
+  cloneDeep,
+  isArray,
+  map,
+  isString,
+  isNumber,
+  mapKeys,
+  isPlainObject,
+  mapValues,
   camelCase,
 } from 'lodash';
-
 export function recursiveCamelCase<TOutput>(
   object: Record<string, any> | Array<Record<string, any>>
 ) {
   return transform(object) as TOutput;
 }
-
 function transform(object: any): any {
-  if (Array.isArray(object)) {
-    return object.map(transform);
+  let camelCaseObject = cloneDeep(object);
+  if (isArray(camelCaseObject)) {
+    return map(camelCaseObject, recursiveCamelCase);
   }
-
-  if (typeof object === 'string') {
-    return object;
+  if (isString(camelCaseObject)) {
+    return camelCaseObject;
   }
-
-  if (typeof object === 'number') {
-    return object;
+  if (isNumber(camelCaseObject)) {
+    return camelCaseObject;
   }
-
-  let result: {[key: string]: any} = {};
-  Object.entries(object).forEach((k, v) => {
-    result[camelCase(`${k}`)] = transform(v);
+  camelCaseObject = mapKeys(camelCaseObject, (_, key) => camelCase(key));
+  // Recursively apply throughout object
+  return mapValues(camelCaseObject, (value) => {
+    if (isPlainObject(value)) {
+      return recursiveCamelCase(value);
+    } else if (isArray(value)) {
+      return map(value, recursiveCamelCase);
+    }
+    return value;
   });
-
-  return result;
 }

@@ -14,7 +14,7 @@ services:
       context: ./packages/api
     env_file: .env
     volumes:
-      - ./library:/usr/library
+      - /library:/usr/library
     ports:
       - 4000:4000
     command: yarn start:prod
@@ -52,8 +52,8 @@ services:
     env_file: .env
     restart: unless-stopped
     volumes:
-      - ./packages/jackett/config:/config
-      - ./packages/jackett/downloads:/downloads
+      - ./packages/jackett/config:/config:rw,shared
+      - ./packages/jackett/downloads:/downloads:rw,shared
     ports:
       - 9117:9117
 
@@ -63,9 +63,9 @@ services:
     env_file: .env
     restart: unless-stopped
     volumes:
-      - ./library/downloads:/downloads
-      - ./packages/transmission/config:/config
-      - ./packages/transmission/watch:/watch
+      - /library/downloads:/downloads
+      - ./packages/transmission/config:/config:rw,shared
+      - ./packages/transmission/watch:/watch:rw,shared
 
   transmission-web:
     image: dperson/nginx
@@ -73,7 +73,7 @@ services:
     depends_on:
       - transmission
     environment:
-      - TZ=Europe/Paris
+      - TZ=America/Los_Angeles
     ports:
       - "9091:80"
     command: -w "http://transmission:9091;/"

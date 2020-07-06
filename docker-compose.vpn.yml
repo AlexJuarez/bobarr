@@ -25,6 +25,9 @@ services:
     entrypoint: ["/sbin/tini", "--", "/usr/bin/openvpn.sh"]
     command: '-p "51413" -p "51413;udp" -f ""'
     tty: true
+    environment:
+      VPN_AUTH: couatli@gmail.com;CEFF@stap8drad@emp
+      TZ: America/Los_Angeles
 
   api:
     links:
