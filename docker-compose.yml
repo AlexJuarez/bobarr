@@ -14,7 +14,7 @@ services:
       context: ./packages/api
     env_file: .env
     volumes:
-      - /library:/usr/library
+      - /library:/usr/library:delegated
     ports:
       - 4000:4000
     command: yarn start:prod
@@ -52,8 +52,8 @@ services:
     env_file: .env
     restart: unless-stopped
     volumes:
-      - ./packages/jackett/config:/config:rw,shared
-      - ./packages/jackett/downloads:/downloads:rw,shared
+      - ./packages/jackett/config:/config:cached
+      - ./packages/jackett/downloads:/downloads:cached
     ports:
       - 9117:9117
 
@@ -63,9 +63,9 @@ services:
     env_file: .env
     restart: unless-stopped
     volumes:
-      - /library/downloads:/downloads
-      - ./packages/transmission/config:/config:rw,shared
-      - ./packages/transmission/watch:/watch:rw,shared
+      - /library/downloads:/downloads:delegated
+      - ./packages/transmission/config:/config:delegated
+      - ./packages/transmission/watch:/watch:cached
 
   transmission-web:
     image: dperson/nginx
