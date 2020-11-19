@@ -2,124 +2,9 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""
-The `BigInt` scalar type represents non-fractional signed whole numeric values.
-BigInt can represent values between -(2^53) + 1 and 2^53 - 1. 
-"""
-scalar BigInt
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-enum DownloadableMediaState {
-  SEARCHING
-  MISSING
-  DOWNLOADING
-  DOWNLOADED
-  PROCESSED
-}
-
-type DownloadingMedia {
-  id: String!
-  title: String!
-  tag: String!
-  resourceId: Float!
-  resourceType: FileType!
-  quality: String!
-  torrent: String!
-}
-
-type EnrichedMovie {
-  id: Float!
-  tmdbId: Float!
-  title: String!
-  state: DownloadableMediaState!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  overview: String!
-  voteAverage: Float!
-  releaseDate: String!
-  originalTitle: String
-  posterPath: String
-  runtime: Float
-}
-
-type EnrichedTVEpisode {
-  id: Float!
-  episodeNumber: Float!
-  seasonNumber: Float!
-  state: DownloadableMediaState!
-  tvShow: TVShow!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  releaseDate: String!
-  voteAverage: Float
-}
-
-type EnrichedTVShow {
-  id: Float!
-  tmdbId: Float!
-  title: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  overview: String!
-  voteAverage: Float!
-  releaseDate: String!
-  originalTitle: String
-  posterPath: String
-  runtime: Float
-}
-
-enum Entertainment {
-  TvShow
-  Movie
-}
-
-enum FileType {
-  EPISODE
-  SEASON
-  MOVIE
-}
-
-input GetTorrentStatusInput {
-  resourceId: Int!
-  resourceType: FileType!
-}
-
 type GraphQLCommonResponse {
   success: Boolean!
   message: String
-}
-
-type JackettFormattedResult {
-  id: String!
-  title: String!
-  quality: String!
-  qualityScore: Float!
-  seeders: Float!
-  peers: Float!
-  link: String!
-  downloadLink: String!
-  tag: String!
-  tagScore: Float!
-  publishDate: String!
-  normalizedTitle: String!
-  normalizedTitleParts: [String!]!
-  size: BigInt!
-}
-
-input JackettInput {
-  title: String!
-  downloadLink: String!
-  quality: String!
-  tag: String!
-}
-
-type LibraryCalendar {
-  movies: [EnrichedMovie!]!
-  tvEpisodes: [EnrichedTVEpisode!]!
 }
 
 type Movie {
@@ -131,101 +16,25 @@ type Movie {
   updatedAt: DateTime!
 }
 
-type Mutation {
-  saveQualityParams(qualities: [QualityInput!]!): GraphQLCommonResponse!
-  saveTags(tags: [TagInput!]!): GraphQLCommonResponse!
-  clearRedisCache: GraphQLCommonResponse!
-  updateParams(params: [UpdateParamsInput!]!): GraphQLCommonResponse!
-  startScanLibraryJob: GraphQLCommonResponse!
-  startFindNewEpisodesJob: GraphQLCommonResponse!
-  startDownloadMissingJob: GraphQLCommonResponse!
-  downloadMovie(jackettResult: JackettInput!, movieId: Int!): GraphQLCommonResponse!
-  downloadTVEpisode(jackettResult: JackettInput!, episodeId: Int!): GraphQLCommonResponse!
-  trackMovie(tmdbId: Int!, title: String!): Movie!
-  removeMovie(tmdbId: Int!): GraphQLCommonResponse!
-  trackTVShow(seasonNumbers: [Int!]!, tmdbId: Int!): TVShow!
-  removeTVShow(tmdbId: Int!): GraphQLCommonResponse!
-  resetLibrary(resetSettings: Boolean!, deleteFiles: Boolean!): GraphQLCommonResponse!
-  downloadOwnTorrent(torrent: String!, mediaType: FileType!, mediaId: Int!): GraphQLCommonResponse!
+enum DownloadableMediaState {
+  SEARCHING
+  MISSING
+  DOWNLOADING
+  DOWNLOADED
+  PROCESSED
 }
 
-type OMDBInfo {
-  ratings: Ratings!
-}
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
-type ParamsHash {
-  region: String!
-  language: String!
-  tmdb_api_key: String!
-  jackett_api_key: String!
-  max_movie_download_size: String!
-  max_tvshow_episode_download_size: String!
-}
-
-type Quality {
+type TVShow {
   id: Float!
-  name: String!
-  match: [String!]!
-  score: Float!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  type: Entertainment!
-}
-
-input QualityInput {
-  id: Float!
-  score: Float!
-}
-
-type Query {
-  getQualityParams(type: Entertainment!): [Quality!]!
-  getTags: [Tag!]!
-  getParams: ParamsHash!
-  search(query: String!): TMDBSearchResults!
-  getPopular: TMDBSearchResults!
-  getTVShowSeasons(tvShowTMDBId: Int!): [TMDBFormattedTVSeason!]!
-  getRecommendedTVShows: [TMDBSearchResult!]!
-  getRecommendedMovies: [TMDBSearchResult!]!
-  discover(originLanguage: String, primaryReleaseYear: String, score: Float, genres: [Float!], page: Float, entertainment: Entertainment = Movie): TMDBPaginatedResult!
-  getLanguages: [TMDBLanguagesResult!]!
-  getGenres: TMDBGenresResults!
-  searchJackett(query: String!): [JackettFormattedResult!]!
-  getTorrentStatus(torrents: [GetTorrentStatusInput!]!): [TorrentStatus!]!
-  getDownloadingMedias: [DownloadingMedia!]!
-  getSearchingMedias: [SearchingMedia!]!
-  getMovies: [EnrichedMovie!]!
-  getTVShows: [EnrichedTVShow!]!
-  getMissingTVEpisodes: [EnrichedTVEpisode!]!
-  getMissingMovies: [EnrichedMovie!]!
-  getTVSeasonDetails(seasonNumber: Int!, tvShowTMDBId: Int!): [EnrichedTVEpisode!]!
-  getCalendar: LibraryCalendar!
-  omdbSearch(title: String!): OMDBInfo!
-}
-
-type Ratings {
-  IMDB: String
-  rottenTomatoes: String
-  metaCritic: String
-}
-
-type SearchingMedia {
-  id: String!
+  tmdbId: Float!
   title: String!
-  resourceId: Float!
-  resourceType: FileType!
-}
-
-type Tag {
-  id: Float!
-  name: String!
-  score: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
-}
-
-input TagInput {
-  name: String!
-  score: Float!
 }
 
 type TMDBFormattedTVEpisode {
@@ -252,28 +61,6 @@ type TMDBFormattedTVSeason {
   episodes: [TMDBFormattedTVEpisode!]
 }
 
-type TMDBGenresResult {
-  id: Float!
-  name: String!
-}
-
-type TMDBGenresResults {
-  movieGenres: [TMDBGenresResult!]!
-  tvShowGenres: [TMDBGenresResult!]!
-}
-
-type TMDBLanguagesResult {
-  code: String!
-  language: String!
-}
-
-type TMDBPaginatedResult {
-  page: Float!
-  totalResults: Float!
-  totalPages: Float!
-  results: [TMDBSearchResult!]!
-}
-
 type TMDBSearchResult {
   id: Float!
   tmdbId: Float!
@@ -290,6 +77,159 @@ type TMDBSearchResults {
   tvShows: [TMDBSearchResult!]!
 }
 
+type TMDBPaginatedResult {
+  page: Float!
+  totalResults: Float!
+  totalPages: Float!
+  results: [TMDBSearchResult!]!
+}
+
+type TMDBLanguagesResult {
+  code: String!
+  language: String!
+}
+
+type TMDBGenresResult {
+  id: Float!
+  name: String!
+}
+
+type TMDBGenresResults {
+  movieGenres: [TMDBGenresResult!]!
+  tvShowGenres: [TMDBGenresResult!]!
+}
+
+type Quality {
+  id: Float!
+  name: String!
+  match: [String!]!
+  score: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  type: Entertainment!
+}
+
+enum Entertainment {
+  TvShow
+  Movie
+}
+
+type Tag {
+  id: Float!
+  name: String!
+  score: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ParamsHash {
+  region: String!
+  language: String!
+  tmdb_api_key: String!
+  jackett_api_key: String!
+  max_movie_download_size: String!
+  max_tvshow_episode_download_size: String!
+  organize_library_strategy: String!
+}
+
+type EnrichedMovie {
+  id: Float!
+  tmdbId: Float!
+  title: String!
+  state: DownloadableMediaState!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  overview: String!
+  voteAverage: Float!
+  releaseDate: String!
+  originalTitle: String
+  posterPath: String
+  runtime: Float
+}
+
+type EnrichedTVShow {
+  id: Float!
+  tmdbId: Float!
+  title: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  overview: String!
+  voteAverage: Float!
+  releaseDate: String!
+  originalTitle: String
+  posterPath: String
+  runtime: Float
+}
+
+type EnrichedTVEpisode {
+  id: Float!
+  episodeNumber: Float!
+  seasonNumber: Float!
+  state: DownloadableMediaState!
+  tvShow: TVShow!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  releaseDate: String!
+  voteAverage: Float
+}
+
+type DownloadingMedia {
+  id: String!
+  title: String!
+  tag: String!
+  resourceId: Float!
+  resourceType: FileType!
+  quality: String!
+  torrent: String!
+}
+
+enum FileType {
+  EPISODE
+  SEASON
+  MOVIE
+}
+
+type SearchingMedia {
+  id: String!
+  title: String!
+  resourceId: Float!
+  resourceType: FileType!
+}
+
+type LibraryCalendar {
+  movies: [EnrichedMovie!]!
+  tvEpisodes: [EnrichedTVEpisode!]!
+}
+
+type LibraryFileDetails {
+  id: Float!
+  libraryPath: String!
+  torrentFileName: String
+  libraryFileSize: BigInt
+}
+
+"""
+The `BigInt` scalar type represents non-fractional signed whole numeric values. BigInt can represent values between -(2^53) + 1 and 2^53 - 1. 
+"""
+scalar BigInt
+
+type JackettFormattedResult {
+  id: String!
+  title: String!
+  quality: String!
+  qualityScore: Float!
+  seeders: Float!
+  peers: Float!
+  link: String!
+  downloadLink: String!
+  tag: String!
+  tagScore: Float!
+  publishDate: String!
+  normalizedTitle: String!
+  normalizedTitleParts: [String!]!
+  size: BigInt!
+}
+
 type TorrentStatus {
   id: Int!
   resourceId: Int!
@@ -303,15 +243,83 @@ type TorrentStatus {
   status: Int!
 }
 
-type TVShow {
+type Ratings {
+  IMDB: String
+  rottenTomatoes: String
+  metaCritic: String
+}
+
+type OMDBInfo {
+  ratings: Ratings!
+}
+
+type Query {
+  getQualityParams(type: Entertainment!): [Quality!]!
+  getTags: [Tag!]!
+  getParams: ParamsHash!
+  search(query: String!): TMDBSearchResults!
+  getPopular: TMDBSearchResults!
+  getTVShowSeasons(tvShowTMDBId: Int!): [TMDBFormattedTVSeason!]!
+  getRecommendedTVShows: [TMDBSearchResult!]!
+  getRecommendedMovies: [TMDBSearchResult!]!
+  discover(originLanguage: String, primaryReleaseYear: String, score: Float, genres: [Float!], page: Float, entertainment: Entertainment = Movie): TMDBPaginatedResult!
+  getLanguages: [TMDBLanguagesResult!]!
+  getGenres: TMDBGenresResults!
+  searchJackett(query: String!): [JackettFormattedResult!]!
+  getTorrentStatus(torrents: [GetTorrentStatusInput!]!): [TorrentStatus!]!
+  getDownloadingMedias: [DownloadingMedia!]!
+  getSearchingMedias: [SearchingMedia!]!
+  getMovies: [EnrichedMovie!]!
+  getTVShows: [EnrichedTVShow!]!
+  getMissingTVEpisodes: [EnrichedTVEpisode!]!
+  getMissingMovies: [EnrichedMovie!]!
+  getTVSeasonDetails(seasonNumber: Int!, tvShowTMDBId: Int!): [EnrichedTVEpisode!]!
+  getCalendar: LibraryCalendar!
+  getMovieFileDetails(tmdbId: Int!): LibraryFileDetails!
+  omdbSearch(title: String!): OMDBInfo!
+}
+
+input GetTorrentStatusInput {
+  resourceId: Int!
+  resourceType: FileType!
+}
+
+type Mutation {
+  saveQualityParams(qualities: [QualityInput!]!): GraphQLCommonResponse!
+  saveTags(tags: [TagInput!]!): GraphQLCommonResponse!
+  clearRedisCache: GraphQLCommonResponse!
+  updateParams(params: [UpdateParamsInput!]!): GraphQLCommonResponse!
+  startScanLibraryJob: GraphQLCommonResponse!
+  startFindNewEpisodesJob: GraphQLCommonResponse!
+  startDownloadMissingJob: GraphQLCommonResponse!
+  downloadMovie(jackettResult: JackettInput!, movieId: Int!): GraphQLCommonResponse!
+  downloadTVEpisode(jackettResult: JackettInput!, episodeId: Int!): GraphQLCommonResponse!
+  trackMovie(tmdbId: Int!, title: String!): Movie!
+  removeMovie(tmdbId: Int!): GraphQLCommonResponse!
+  trackTVShow(seasonNumbers: [Int!]!, tmdbId: Int!): TVShow!
+  removeTVShow(tmdbId: Int!): GraphQLCommonResponse!
+  resetLibrary(resetSettings: Boolean!, deleteFiles: Boolean!): GraphQLCommonResponse!
+  downloadOwnTorrent(torrent: String!, mediaType: FileType!, mediaId: Int!): GraphQLCommonResponse!
+}
+
+input QualityInput {
   id: Float!
-  tmdbId: Float!
-  title: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  score: Float!
+}
+
+input TagInput {
+  name: String!
+  score: Float!
 }
 
 input UpdateParamsInput {
   key: String!
   value: String!
+}
+
+input JackettInput {
+  title: String!
+  downloadLink: String!
+  quality: String!
+  tag: String!
 }
