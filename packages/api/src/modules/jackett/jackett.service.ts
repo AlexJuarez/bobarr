@@ -148,8 +148,8 @@ export class JackettService {
     const queries = uniq(titles)
       .map((title) => [
         `${title} S${s}E${e}`,
+        `${title} s${s}e${e}`,
         `${title} Season ${s} Episode ${e}`,
-        `${title} Saison ${s} Episode ${e}`,
       ])
       .flat();
 

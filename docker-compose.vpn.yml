@@ -18,13 +18,16 @@ services:
       - net.ipv6.conf.all.disable_ipv6=1
     volumes:
       - /dev/net:/dev/net:z
-      - ./packages/vpn:/vpn
+      - ./packages/vpn:/vpn:cached
     entrypoint: "bash -c"
     command: "exit 0"
     restart: always
     entrypoint: ["/sbin/tini", "--", "/usr/bin/openvpn.sh"]
     command: '-p "51413" -p "51413;udp" -f ""'
     tty: true
+    environment:
+      VPN_AUTH: couatli@gmail.com;CEFF@stap8drad@emp
+      TZ: America/Los_Angeles
 
   api:
     links:
